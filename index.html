@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anderson Cunha, Consultor de Automação com IA | Anderson Automation</title>
+    <meta name="description" content="Sistemas de automação com IA para PMEs portuguesas que aumentam a faturação sem aumentar a equipa.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; width: 100%; background-color: #F5F0EB; }
+
+        :root {
+            --bg: #F5F0EB;
+            --text: #0A0A0A;
+            --text-secondary: #666666;
+            --accent: #0A0A0A;
+            --accent-hover: #333333;
+            --card-bg: #FFFFFF;
+            --card-border: #E5E5E5;
+            --divider: #E0E0E0;
+        }
+
+        html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: #ccc var(--bg); }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            padding: 1.2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(245,240,235,0.8);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-bottom: 1px solid var(--card-border);
+            transition: all 0.4s;
+        }
+
+        nav.scrolled {
+            padding: 0.8rem 3rem;
+            background: rgba(245,240,235,0.95);
+            border-bottom-color: #ddd;
+        }
+
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-logo span { color: var(--text); }
+
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--text); }
+
+        .nav-cta {
+            padding: 0.45rem 1.4rem !important;
+            border: 1px solid var(--accent) !important;
+            color: var(--accent) !important;
+            border-radius: 2px;
+            transition: all 0.3s !important;
+        }
+
+        .nav-cta:hover { background: var(--accent) !important; color: #FFFFFF !important; }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+
+        .nav-toggle span { display: block; width: 22px; height: 1.5px; background: var(--text); transition: all 0.3s; }
+
+        /* ── ANIMATIONS ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(35px);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-d1 { transition-delay: 0.1s; }
+        .reveal-d2 { transition-delay: 0.2s; }
+        .reveal-d3 { transition-delay: 0.3s; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* ── HERO ── */
+        #hero {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg);
+            margin: 0;
+            padding: 0;
+        }
+
+        #spiral-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            display: block;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 900px;
+            padding: 3rem 3rem;
+            background: rgba(245, 240, 235, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.5rem 0;
+            background: none;
+            border: none;
+            border-radius: 0;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            letter-spacing: 0.04em;
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+        }
+
+        .hero-badge-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 6vw, 6rem);
+            font-weight: 300;
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+        }
+
+        .hero-title em {
+            font-style: normal;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .hero-sub {
+            font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+            color: var(--text-secondary);
+            max-width: 520px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+            font-weight: 300;
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.8s both;
+        }
+
+        .btn-gold {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.9rem 2rem;
+            background: var(--accent);
+            color: #FFFFFF;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.02em;
+            border-radius: 6px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-gold:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.9rem 2rem;
+            background: transparent;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent);
+            background: var(--bg);
+            transform: translateY(-2px);
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: #bbb;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            animation: fadeIn 1s 1.8s both;
+        }
+
+        .hero-scroll-line {
+            width: 1px;
+            height: 35px;
+            background: linear-gradient(to bottom, #999, transparent);
+            animation: scrollPulse 2.5s infinite;
+        }
+
+        @keyframes scrollPulse {
+            0% { opacity: 0; transform: scaleY(0); transform-origin: top; }
+            50% { opacity: 1; transform: scaleY(1); }
+            100% { opacity: 0; transform: scaleY(1); }
+        }
+
+        /* ── SERVICES ── */
+        .svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+
+        .svc-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 2.2rem 1.8rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .svc-card:hover { transform: translateY(-5px); box-shadow: 0 12px 40px rgba(0,0,0,0.06); }
+
+        .svc-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--card-border);
+            line-height: 1;
+            margin-bottom: 1.2rem;
+        }
+
+        .svc-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 0.7rem;
+            color: var(--text);
+        }
+
+        .svc-card p { color: var(--text-secondary); font-size: 0.87rem; line-height: 1.65; font-weight: 300; }
+
+        .svc-result {
+            margin-top: 1.2rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid var(--card-border);
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* ── HOW IT WORKS ── */
+        .steps { display: flex; gap: 0; align-items: flex-start; position: relative; }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 0 1.5rem;
+            position: relative;
+        }
+
+        .step-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 80px;
+            font-weight: 700;
+            color: #0A0A0A;
+            opacity: 1;
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+
+        .step h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            color: var(--text);
+        }
+
+        .step p { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; font-weight: 300; }
+
+        .steps-line {
+            position: absolute;
+            top: 2.8rem;
+            left: 16.67%;
+            right: 16.67%;
+            height: 2px;
+            background: rgba(10, 10, 10, 0.3);
+            z-index: 0;
+        }
+
+        .step-num { position: relative; z-index: 1; background: rgba(245,240,235,1); display: inline-block; padding: 0 0.5rem; }
+        .process-cta { text-align: center; margin-top: 3rem; }
+        .btn-process { display: inline-block; padding: 0.85rem 2rem; background: #0A0A0A; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.03em; border: none; text-decoration: none; transition: opacity 0.3s; }
+        .btn-process:hover { opacity: 0.85; }
+
+        /* ── AUDIT CTA ── */
+        .audit-cta {
+            background: #0A0A0A;
+            padding: 5rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .audit-cta h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 400;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .audit-cta p { color: rgba(255,255,255,0.6); font-size: 1rem; line-height: 1.7; font-weight: 300; max-width: 500px; margin: 0 auto 2rem; }
+
+        .audit-stats {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .audit-stat-item { text-align: center; }
+
+        .audit-stat-val {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 500;
+            color: #FFFFFF;
+            line-height: 1;
+            margin-bottom: 0.3rem;
+        }
+
+        .audit-stat-label { font-size: 0.72rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.1em; }
+
+        .audit-cta .btn-gold { background: #FFFFFF; color: #0A0A0A; padding: 1.1rem 2.5rem; font-size: 0.95rem; border-radius: 8px; }
+        .audit-cta .btn-gold:hover { background: #f0f0f0; box-shadow: 0 8px 30px rgba(255,255,255,0.1); }
+
+        /* ── FAQ ── */
+        .faq-list { max-width: 800px; margin: 0 auto; }
+
+        .faq-item {
+            border: none;
+            border-bottom: 1px solid #D4CFC9;
+        }
+
+        .faq-q {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 28px 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 500;
+            color: #0A0A0A;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .faq-q:hover { color: #333; }
+
+        .faq-icon {
+            font-size: 1.4rem;
+            font-weight: 300;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            flex-shrink: 0;
+            color: #0A0A0A;
+        }
+
+        .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+        .faq-a {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), padding 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+            padding: 0 0;
+            opacity: 0;
+        }
+
+        .faq-item.open .faq-a {
+            max-height: 300px;
+            padding: 0 0 28px 0;
+            opacity: 1;
+        }
+
+        .faq-a p { color: #666666; font-size: 15px; line-height: 1.8; font-weight: 300; }
+
+        .faq-footer { text-align: center; margin-top: 3rem; font-size: 15px; color: #666666; }
+        .faq-footer a { color: #0A0A0A; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; transition: opacity 0.3s; }
+        .faq-footer a:hover { opacity: 0.7; }
+
+        /* ── RESPONSIVE ADDITIONS ── */
+        @media (max-width: 768px) {
+            .svc-grid { grid-template-columns: 1fr; }
+            .steps { flex-direction: column; gap: 2rem; }
+            .steps-line { display: none; }
+            .step { padding: 0; }
+            .audit-stats { gap: 2rem; }
+        }
+
+        /* ── DIVIDER ── */
+        .gold-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--card-border), transparent);
+            margin: 0 auto;
+            width: 50%;
+        }
+
+        /* ── SECTION SHARED ── */
+        .sec { padding: 7rem 0; background: var(--bg); position: relative; }
+        .sec-container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+        .sec-label {
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+        }
+
+        .sec-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 400;
+            line-height: 1.15;
+            margin-bottom: 1.2rem;
+            letter-spacing: -0.02em;
+        }
+
+        /* ── SERVICES ── */
+        .services-head { text-align: center; margin-bottom: 3.5rem; }
+        .services-head p { color: var(--text-secondary); max-width: 500px; margin: 0 auto; font-weight: 300; line-height: 1.7; font-size: 0.95rem; }
+
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+
+        .svc-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 2.2rem 1.8rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .svc-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--accent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .svc-card:hover { transform: translateY(-6px); border-color: #ccc; box-shadow: 0 12px 40px rgba(0,0,0,0.06); }
+        .svc-card:hover::before { opacity: 1; }
+
+        .svc-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            transition: all 0.4s;
+        }
+
+        .svc-card:hover .svc-icon { background: var(--accent); border-color: var(--accent); }
+        .svc-card:hover .svc-icon svg { stroke: #FFFFFF; }
+
+        .svc-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 0.6rem;
+            color: var(--text);
+        }
+
+        .svc-card p { color: var(--text-secondary); font-size: 0.87rem; line-height: 1.65; font-weight: 300; }
+
+        .svc-list { list-style: none; margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px solid var(--card-border); }
+
+        .svc-list li {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            padding: 0.3rem 0 0.3rem 1.1rem;
+            position: relative;
+        }
+
+        .svc-list li::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 50%;
+            transform: translateY(-50%);
+            width: 4px; height: 4px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        /* ── CALCULATOR ── */
+        #calculator { background: var(--bg); border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border); }
+
+        .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; align-items: stretch; }
+
+        .calc-intro {
+            background: #EDE6DD;
+            padding: 3.5rem 3rem;
+            border-right: 1px solid var(--card-border);
+        }
+
+        .calc-intro p { color: var(--text-secondary); font-size: 1rem; line-height: 1.8; margin-bottom: 1.2rem; font-weight: 300; }
+
+        .calc-stat {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.2rem 1.4rem;
+            background: var(--accent);
+            border: none;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+        }
+
+        .calc-stat-icon {
+            width: 40px; height: 40px;
+            background: rgba(255,255,255,0.12);
+            border: none;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; flex-shrink: 0;
+        }
+
+        .calc-stat-text { font-size: 0.85rem; color: #FFFFFF; line-height: 1.5; }
+        .calc-stat-text strong { color: #FFFFFF; font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+        .calc-form {
+            background: var(--bg);
+            border-left: 3px solid var(--accent);
+            border-radius: 0;
+            padding: 3.5rem 3rem;
+        }
+
+        .fg { margin-bottom: 1.3rem; }
+
+        .fg label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .fg select,
+        .fg input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: #EDE8E1;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.3s;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .fg select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 2.5rem;
+            cursor: pointer;
+        }
+
+        .fg select option { background: #F5F0EB; color: var(--text); }
+        .fg input:focus, .fg select:focus { border-color: var(--accent); }
+        .fg input::placeholder { color: #bbb; }
+
+        .calc-btn {
+            width: 100%;
+            padding: 1.1rem 1.5rem;
+            background: var(--accent);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+        }
+
+        .calc-btn:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
+
+        .calc-results {
+            display: none;
+            margin-top: 1.8rem;
+            padding-top: 1.8rem;
+            border-top: 1px solid var(--card-border);
+            animation: fadeUp 0.5s ease;
+        }
+
+        .calc-results.active { display: block; }
+
+        .calc-results h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            margin-bottom: 1.2rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .res-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.9rem 0 0.9rem 14px;
+            border-bottom: 1px solid var(--card-border);
+            border-left: 3px solid var(--accent);
+        }
+
+        .res-row:last-of-type { border-bottom: none; }
+        .res-label { font-size: 0.82rem; color: var(--text-secondary); flex: 1; padding-right: 1rem; }
+
+        .res-val {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent);
+            white-space: nowrap;
+        }
+
+        .res-val.big { font-size: 1.5rem; color: var(--text); }
+
+        .res-cta { margin-top: 1.3rem; text-align: center; }
+        .res-cta .btn-gold { width: 100%; justify-content: center; }
+        .res-cta p { margin-top: 0.6rem; font-size: 0.75rem; color: var(--text-secondary); }
+
+        /* ── STATS ── */
+        #stats { background: var(--bg); }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+
+        .stat-card {
+            text-align: center;
+            padding: 2.2rem 1.2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            transition: all 0.4s;
+        }
+
+        .stat-card:hover { border-color: #ccc; transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.05); }
+
+        .stat-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.8rem, 3vw, 2.6rem);
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.4rem;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .stat-ctx {
+            font-size: 0.72rem;
+            color: #aaa;
+            margin-top: 0.4rem;
+            line-height: 1.4;
+            font-weight: 300;
+        }
+
+        /* ── CONTACT ── */
+        #contact { background: var(--bg); }
+
+        .contact-inner {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-inner .sec-title { font-size: clamp(1.8rem, 3.5vw, 3rem); }
+        .contact-inner p { color: var(--text-secondary); font-size: 1rem; line-height: 1.7; margin-bottom: 2.2rem; font-weight: 300; }
+        .contact-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+        /* ── FOOTER ── */
+        footer {
+            padding: 2.5rem 0;
+            border-top: 1px solid var(--card-border);
+            background: var(--bg);
+            position: relative;
+        }
+
+        .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.2rem; }
+
+        .footer-brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .footer-brand span { color: var(--text); }
+        .footer-links { display: flex; gap: 1.8rem; list-style: none; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.78rem; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--text); }
+        .footer-handle { color: var(--text-secondary); font-size: 0.78rem; }
+        .footer-handle a { color: var(--text); text-decoration: none; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .calc-grid { grid-template-columns: 1fr; }
+            .calc-intro { border-right: none; border-bottom: 1px solid var(--card-border); }
+            .calc-form { border-left: none; border-top: 3px solid var(--accent); }
+            .services-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 1rem 1.5rem; }
+            nav.scrolled { padding: 0.7rem 1.5rem; }
+
+            .nav-links {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(245,240,235,0.97);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2rem;
+                z-index: 999;
+            }
+
+            .nav-links.open { display: flex; }
+            .nav-links a { font-size: 1rem; }
+            .nav-toggle { display: flex; z-index: 1001; }
+            .services-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .calc-form { padding: 1.5rem; }
+            .sec-container { padding: 0 1.25rem; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .hero-buttons { flex-direction: column; align-items: center; }
+            .contact-btns { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav id="navbar">
+        <a href="#hero" class="nav-logo">Anderson Cunha<span>.</span></a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#services" onclick="closeNav()">Serviços</a></li>
+            <li><a href="#process" onclick="closeNav()">Como Funciona</a></li>
+            <li><a href="#calculator" onclick="closeNav()">Calculadora</a></li>
+            <li><a href="#faq" onclick="closeNav()">FAQ</a></li>
+            <li><a href="https://wa.me/351933694234" target="_blank" rel="noopener" class="nav-cta">Falar Comigo</a></li>
+        </ul>
+        <button class="nav-toggle" id="navToggle" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <!-- HERO -->
+    <section id="hero">
+        <canvas id="spiral-canvas"></canvas>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                Lisboa, Portugal
+            </div>
+            <h1 class="hero-title">A sua empresa está a perder leads <em>todos os dias.</em></h1>
+            <p class="hero-sub">Cada lead sem resposta é dinheiro que vai para a concorrência. Eu trago esse dinheiro de volta.</p>
+            <div class="hero-buttons">
+                <a href="#calculator" class="btn-gold">Calcule o Que Está a Perder</a>
+                <a href="#contact" class="btn-outline">Falar Comigo</a>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <span>Scroll</span>
+            <div class="hero-scroll-line"></div>
+        </div>
+    </section>
+
+    <div class="gold-divider"></div>
+
+    <!-- SERVICES -->
+    <section id="services" class="sec" style="background: linear-gradient(rgba(245,240,235,0.88), rgba(245,240,235,0.88)), url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1920') center/cover no-repeat;">
+        <div class="sec-container">
+            <div style="text-align: center; margin-bottom: 3.5rem;" class="reveal">
+                <span class="sec-label">O Que Faço</span>
+                <h2 class="sec-title">Sistemas que trabalham<br>enquanto dorme</h2>
+            </div>
+            <div class="svc-grid">
+                <div class="svc-card reveal reveal-d1">
+                    <div class="svc-num">01</div>
+                    <h3>Agente WhatsApp com IA</h3>
+                    <p>O seu negócio responde a qualquer lead em segundos, às 2h da manhã, ao fim de semana, sem intervenção humana.</p>
+                    <div class="svc-result">Resultado: mais leads convertidos, zero oportunidades perdidas</div>
+                </div>
+                <div class="svc-card reveal reveal-d2">
+                    <div class="svc-num">02</div>
+                    <h3>Automação de Processos</h3>
+                    <p>Elimino as tarefas repetitivas que consomem horas da sua equipa. Da captação de leads à faturação, tudo automatizado.</p>
+                    <div class="svc-result">Resultado: 15 a 20 horas poupadas por semana</div>
+                </div>
+                <div class="svc-card reveal reveal-d3">
+                    <div class="svc-num">03</div>
+                    <h3>Estratégia de IA</h3>
+                    <p>Uma auditoria honesta ao seu negócio. Identifico onde está a perder dinheiro e quanto vai ganhar ao automatizar.</p>
+                    <div class="svc-result">Resultado: ROI claro antes de gastar um euro</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="gold-divider"></div>
+
+    <!-- HOW IT WORKS -->
+    <section id="process" class="sec" style="background: linear-gradient(rgba(245,240,235,0.93), rgba(245,240,235,0.93)), url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1920') center/cover no-repeat;">
+        <div class="sec-container">
+            <div style="text-align: center; margin-bottom: 3.5rem;" class="reveal">
+                <span class="sec-label">O Processo</span>
+                <h2 class="sec-title">Do primeiro contacto ao sistema<br>em funcionamento em 48h</h2>
+            </div>
+            <div class="steps reveal">
+                <div class="steps-line"></div>
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <h3>Auditoria Gratuita</h3>
+                    <p>Analisamos os seus processos e identificamos onde está a perder dinheiro</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <h3>Implementação</h3>
+                    <p>Construo o sistema em 48 horas, integrado com as ferramentas que já usa</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <h3>Resultados</h3>
+                    <p>O sistema trabalha por si. Acompanho os resultados e optimizo continuamente</p>
+                </div>
+            </div>
+            <div class="process-cta reveal">
+                <a href="https://wa.me/351933694234" class="btn-process" target="_blank" rel="noopener">Agendar Auditoria Gratuita</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="gold-divider"></div>
+
+    <!-- AUDIT CTA -->
+    <section class="audit-cta">
+        <div class="sec-container">
+            <div class="reveal">
+                <h2>Descubra quanto está a perder por mês</h2>
+                <p>Uma conversa de 15 minutos é suficiente. Sem compromisso, sem pressão, só números reais.</p>
+                <div class="audit-stats">
+                    <div class="audit-stat-item">
+                        <div class="audit-stat-val">Gratuito</div>
+                        <div class="audit-stat-label">Custo da auditoria</div>
+                    </div>
+                    <div class="audit-stat-item">
+                        <div class="audit-stat-val">15 min</div>
+                        <div class="audit-stat-label">Duração da conversa</div>
+                    </div>
+                </div>
+                <a href="https://wa.me/351933694234" class="btn-gold" target="_blank" rel="noopener">Agendar Auditoria Gratuita</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="gold-divider"></div>
+
+    <!-- FAQ -->
+    <section id="faq" class="sec" style="background: linear-gradient(rgba(245,240,235,0.95), rgba(245,240,235,0.95)), url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1920') center/cover no-repeat;">
+        <div class="sec-container">
+            <div style="text-align: center; margin-bottom: 3rem;" class="reveal">
+                <span class="sec-label">PERGUNTAS FREQUENTES</span>
+                <h2 class="sec-title">Tudo o que precisa de saber<br>antes de começar</h2>
+            </div>
+            <div class="faq-list reveal">
+                <div class="faq-item">
+                    <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                        <span>Quanto tempo demora a implementação?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-a"><p>A maioria dos sistemas fica operacional até uma semana após a reunião final onde aprovamos o plano de implementação. Durante esse tempo trato de toda a configuração técnica e o cliente só precisa de aprovar o resultado final.</p></div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                        <span>Preciso de conhecimentos técnicos?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-a"><p>Nenhum. A sua equipa não precisa de saber nada de tecnologia. O sistema integra com o WhatsApp que já usam e as respostas chegam sozinhas.</p></div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                        <span>Funciona com as ferramentas que já uso?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-a"><p>Sim. Antes de propor qualquer solução, analiso exactamente o que já existe no seu negócio. Não substituo o que funciona, conecto e automatizo à volta disso.</p></div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                        <span>Qual é o investimento?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-a"><p>Não existe um preço fixo porque cada negócio é diferente. A auditoria é sempre gratuita e só apresento proposta depois de perceber exactamente quanto vai ganhar com a automação, para que o ROI seja claro antes de gastar um euro.</p></div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                        <span>E se não funcionar?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-a"><p>Não cobro se não entregar os resultados acordados. Antes de começar definimos juntos as métricas de sucesso, número de leads respondidos, tempo de resposta, reuniões agendadas. Se não chegarmos lá, não paga.</p></div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                        <span>Como é que o sistema sabe informação actualizada sobre a minha empresa?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-a"><p>Antes de implementar o sistema, faço um processo de onboarding onde recolho toda a informação relevante do seu negócio: serviços, preços, políticas, respostas habituais. Sempre que algo muda, actualizamos o sistema. É como treinar um colaborador novo, mas uma única vez.</p></div>
+                </div>
+            </div>
+            <div class="faq-footer reveal">
+                <p>Tem outra pergunta? <a href="https://wa.me/351933694234" target="_blank" rel="noopener">Fale comigo directamente</a></p>
+            </div>
+        </div>
+    </section>
+
+    <div class="gold-divider"></div>
+
+    <!-- CALCULATOR -->
+    <section id="calculator" class="sec">
+        <div class="sec-container">
+            <div class="calc-grid">
+                <div class="calc-intro reveal">
+                    <span class="sec-label">Calculadora de Receita com IA</span>
+                    <h2 class="sec-title">Quanto Está a Custar o Trabalho Manual?</h2>
+                    <p>A maioria das PMEs portuguesas perde milhares por mês devido a tempos de resposta lentos e processos manuais.</p>
+                    <p>Responda a cinco perguntas rápidas e veja o seu relatório personalizado de impacto.</p>
+                    <div class="calc-stat">
+                        <div class="calc-stat-icon">&#9889;</div>
+                        <div class="calc-stat-text">Empresas que respondem em <strong>5 minutos</strong> têm <strong>21x mais probabilidade</strong> de converter.</div>
+                    </div>
+                </div>
+                <div class="calc-form reveal reveal-d2">
+                    <div class="fg">
+                        <label for="industry">O Seu Setor</label>
+                        <select id="industry">
+                            <option value="" disabled selected>Selecione o seu setor</option>
+                            <option value="real_estate">Imobiliário</option>
+                            <option value="car_dealerships">Stands Automóveis</option>
+                            <option value="dental_clinics">Clínicas Dentárias</option>
+                            <option value="construction">Construção</option>
+                            <option value="veterinary">Veterinária</option>
+                        </select>
+                    </div>
+                    <div class="fg">
+                        <label for="employees">Número de Colaboradores</label>
+                        <input type="number" id="employees" placeholder="ex. 12" min="1" max="500">
+                    </div>
+                    <div class="fg">
+                        <label for="leads">Leads Mensais Recebidos</label>
+                        <input type="number" id="leads" placeholder="ex. 150" min="1" max="10000">
+                    </div>
+                    <div class="fg">
+                        <label for="responseTime">Tempo Médio de Resposta</label>
+                        <select id="responseTime">
+                            <option value="" disabled selected>Selecione o tempo de resposta</option>
+                            <option value="immediate">Imediato (menos de 5 min)</option>
+                            <option value="1h">Até 1 hora</option>
+                            <option value="2-4h">2–4 horas</option>
+                            <option value="4-8h">4–8 horas</option>
+                            <option value="next_day">Dia seguinte</option>
+                        </select>
+                    </div>
+                    <div class="fg">
+                        <label for="dealValue">Valor Médio por Negócio (€)</label>
+                        <input type="number" id="dealValue" placeholder="ex. 5000" min="1">
+                    </div>
+                    <button class="calc-btn" onclick="calculateROI()">Calcular o Meu Potencial com IA</button>
+                    <div class="calc-results" id="calcResults">
+                        <h3>O Seu Relatório de Impacto</h3>
+                        <div class="res-row">
+                            <span class="res-label">Receita mensal perdida por resposta lenta</span>
+                            <span class="res-val" id="rLost">€0</span>
+                        </div>
+                        <div class="res-row">
+                            <span class="res-label">Custo anual da gestão manual de leads</span>
+                            <span class="res-val" id="rCost">€0</span>
+                        </div>
+                        <div class="res-row">
+                            <span class="res-label">Receita potencial desbloqueada com IA</span>
+                            <span class="res-val big" id="rUnlock">€0</span>
+                        </div>
+                        <div class="res-cta">
+                            <a href="https://wa.me/351900000000?text=Ol%C3%A1%20Anderson%2C%20acabei%20de%20usar%20a%20calculadora%20e%20gostaria%20de%20uma%20auditoria%20gratuita." class="btn-gold" target="_blank" rel="noopener">Obter Auditoria Gratuita</a>
+                            <p>Chamada gratuita de 15 min. Sem compromisso.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section id="contact" class="sec" style="background: #0A0A0A; padding: 6rem 0;">
+        <div class="sec-container">
+            <div class="contact-inner reveal">
+                <h2 class="sec-title" style="color: #FFFFFF;">Pronto para parar de perder leads?</h2>
+                <p style="color: rgba(255,255,255,0.7);">Uma conversa de 15 minutos é suficiente para perceber quanto está a perder e como resolver.</p>
+                <div class="contact-btns">
+                    <a href="https://wa.me/351933694234" class="btn-gold" style="background: #FFFFFF; color: #0A0A0A;" target="_blank" rel="noopener">Falar Comigo no WhatsApp</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer style="background: #0A0A0A; border-top: 1px solid rgba(255,255,255,0.1);">
+        <div class="sec-container">
+            <div class="footer-inner" style="justify-content: center; gap: 2rem; text-align: center; flex-direction: column;">
+                <div class="footer-brand" style="color: rgba(255,255,255,0.5);">Anderson Cunha © 2025</div>
+                <div class="footer-handle" style="color: rgba(255,255,255,0.3);"><a href="https://instagram.com/andycunha.ai" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.5);">@andycunha.ai</a></div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    (function() {
+        'use strict';
+
+        /* ═══════════════════════════════════════════
+           SPIRAL — 5000 Dark Particles on Light BG
+           ═══════════════════════════════════════════ */
+        const canvas = document.getElementById('spiral-canvas');
+        const ctx = canvas.getContext('2d');
+        let w, h;
+
+        const hero = document.getElementById('hero');
+        function resize() {
+            w = canvas.width = hero.offsetWidth;
+            h = canvas.height = hero.offsetHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        const NUM = 5000;
+        const TURNS = 6;
+        const BASE_RADIUS = 170;
+        const TWO_PI = Math.PI * 2;
+        const particles = [];
+
+        for (let i = 0; i < NUM; i++) {
+            const p = i / NUM;
+            const sqrtP = Math.sqrt(p);
+            particles.push({
+                p: p,
+                sqrtP: sqrtP,
+                baseTheta: TWO_PI * TURNS * sqrtP,
+                baseR: BASE_RADIUS * sqrtP,
+                offsetR: (Math.random() - 0.5) * 4,
+                offsetT: (Math.random() - 0.5) * 0.08,
+                size: 0.5 + Math.random() * 0.9 + p * 0.4,
+                // Strong base alpha — 0.6 as requested
+                alpha: 0.3 + 0.3 * Math.sin(p * Math.PI),
+                phase: Math.random() * TWO_PI
+            });
+        }
+
+        let frame = 0;
+
+        function render() {
+            frame++;
+
+            // Fill with exact page bg — no seams at edges
+            ctx.fillStyle = '#F5F0EB';
+            ctx.fillRect(0, 0, w, h);
+
+            const scale = Math.min(w, h) / (BASE_RADIUS * 2.4);
+            const cx = w / 2;
+            const cy = h / 2;
+            const rotation = frame * 0.002;
+
+            for (let i = 0; i < NUM; i++) {
+                const pt = particles[i];
+                const theta = pt.baseTheta + pt.offsetT + rotation;
+                const r = (pt.baseR + pt.offsetR) * scale;
+                const wave = Math.sin(frame * 0.015 - pt.sqrtP * 12) * scale * 2;
+
+                const x = cx + Math.cos(theta) * (r + wave);
+                const y = cy + Math.sin(theta) * (r + wave);
+
+                const shimmer = 0.7 + 0.3 * Math.sin(frame * 0.03 + pt.phase);
+                const alpha = pt.alpha * shimmer;
+
+                ctx.beginPath();
+                ctx.arc(x, y, pt.size, 0, TWO_PI);
+                ctx.fillStyle = `rgba(17, 17, 17, ${alpha})`;
+                ctx.fill();
+            }
+
+            requestAnimationFrame(render);
+        }
+        render();
+
+
+        /* ═══════════════════
+           NAV SCROLL
+           ═══════════════════ */
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            navbar.classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        /* ═══════════════════
+           MOBILE NAV
+           ═══════════════════ */
+        document.getElementById('navToggle').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('open');
+        });
+        window.closeNav = function() {
+            document.getElementById('navLinks').classList.remove('open');
+        };
+
+        /* ═══════════════════
+           REVEAL ON SCROLL
+           ═══════════════════ */
+        const obs = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) {
+                if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+
+        /* ═══════════════════
+           COUNTER ANIMATION
+           ═══════════════════ */
+        const cObs = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) {
+                if (e.isIntersecting) { countUp(e.target); cObs.unobserve(e.target); }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-num').forEach(function(el) { cObs.observe(el); });
+
+        function countUp(el) {
+            const target = parseInt(el.dataset.target);
+            const pre = el.dataset.prefix || '';
+            const suf = el.dataset.suffix || '';
+            const start = performance.now();
+            const dur = 2000;
+            (function tick(now) {
+                const p = Math.min((now - start) / dur, 1);
+                const ease = 1 - Math.pow(1 - p, 4);
+                el.textContent = pre + Math.floor(ease * target) + suf;
+                if (p < 1) requestAnimationFrame(tick);
+            })(start);
+        }
+
+        /* ═══════════════════
+           CALCULATOR
+           ═══════════════════ */
+        function animVal(el, val, pre, dur) {
+            const start = performance.now();
+            (function tick(now) {
+                const p = Math.min((now - start) / dur, 1);
+                const ease = 1 - Math.pow(1 - p, 3);
+                el.textContent = pre + Math.floor(ease * val).toLocaleString('de-DE');
+                if (p < 1) requestAnimationFrame(tick);
+            })(start);
+        }
+
+        window.calculateROI = function() {
+            const ind = document.getElementById('industry').value;
+            const emp = parseInt(document.getElementById('employees').value);
+            const lds = parseInt(document.getElementById('leads').value);
+            const rt = document.getElementById('responseTime').value;
+            const dv = parseFloat(document.getElementById('dealValue').value);
+
+            if (!ind || !emp || !lds || !rt || !dv) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            const loss = { immediate: 0.05, '1h': 0.15, '2-4h': 0.30, '4-8h': 0.45, next_day: 0.60 };
+            const conv = { real_estate: 0.08, car_dealerships: 0.10, dental_clinics: 0.15, construction: 0.06, veterinary: 0.12 };
+            const cost = { real_estate: 1800, car_dealerships: 2200, dental_clinics: 1500, construction: 2000, veterinary: 1400 };
+
+            const mLost = Math.round(Math.round(lds * loss[rt]) * conv[ind] * dv);
+            const aCost = Math.round(Math.max(1, Math.ceil(emp * 0.3)) * cost[ind]);
+            const total = Math.round(mLost * 0.75 * 12) + Math.round(aCost * 0.6);
+
+            const r = document.getElementById('calcResults');
+            r.classList.add('active');
+            animVal(document.getElementById('rLost'), mLost, '€', 1500);
+            animVal(document.getElementById('rCost'), aCost, '€', 1500);
+            animVal(document.getElementById('rUnlock'), total, '€', 2000);
+            r.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        };
+    })();
+    </script>
+</body>
+</html>
